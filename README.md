@@ -76,11 +76,15 @@ Deploy çıktısında `https://reklam-connector.<hesabin>.workers.dev` gibi bir 
 claude.ai → **Ayarlar → Connectors → Add custom connector**:
 
 - **Ad:** Reklam Connector
-- **URL:** `https://reklam-connector.<hesabin>.workers.dev/mcp/<MCP_SECRET>`
+- **URL:** `https://reklam-connector.<hesabin>.workers.dev/mcp`
+- **Kimlik doğrulama:** Oturum açma yok
+- **İstek başlıkları → Başlık ekle:** ad `Authorization`, değer `Bearer <MCP_SECRET>`
 
 Connector web, mobil ve Claude Code'da kullanılabilir hale gelir.
 
-> ⚠️ Bu URL bir şifre gibidir. Bilen herkes reklam hesaplarını yönetebilir, o yüzden kimseyle paylaşma. URL sızarsa `npx wrangler secret put MCP_SECRET` ile yeni bir anahtar ver ve connector'ı yeni URL ile güncelle.
+İstek başlığı eklenemeyen istemciler için anahtar adresin içinde de verilebilir: `https://reklam-connector.<hesabin>.workers.dev/mcp/<MCP_SECRET>`. Ancak bu yöntemde anahtar ekran görüntülerinde ve geçmişte görünür.
+
+> ⚠️ MCP_SECRET bir şifre gibidir. Bilen herkes reklam hesaplarını yönetebilir, o yüzden kimseyle paylaşma. Sızarsa `npx wrangler secret put MCP_SECRET` ile yeni bir anahtar ver ve connector'ı güncelle.
 
 ---
 

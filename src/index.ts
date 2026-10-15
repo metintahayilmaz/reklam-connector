@@ -42,11 +42,15 @@ export default {
       });
     }
 
-    const match = url.pathname.match(/^\/mcp\/([^/]+)\/?$/);
     if (!env.MCP_SECRET || env.MCP_SECRET.length < 24) {
       return new Response("MCP_SECRET secret'ı tanımlı değil veya çok kısa (en az 24 karakter).", { status: 500 });
     }
-    if (!match || !timingSafeEqual(match[1], env.MCP_SECRET)) {
+    // The secret is accepted either as an "Authorization: Bearer <secret>" header on /mcp
+    // (preferred: it never appears in URLs or screenshots) or as a path segment /mcp/<secret>.
+    const pathMatch = url.pathname.match(/^\/mcp(?:\/([^/]+))?\/?$/);
+    const bearer = request.headers.get("Authorization")?.match(/^Bearer\s+(.+)$/i)?.[1]?.trim();
+    const provided = pathMatch?.[1] ?? bearer;
+    if (!pathMatch || !provided || !timingSafeEqual(provided, env.MCP_SECRET)) {
       return new Response("Not found", { status: 404 });
     }
 
