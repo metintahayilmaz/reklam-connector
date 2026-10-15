@@ -1,0 +1,12 @@
+name = "reklam-connector"
+main = "src/index.ts"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+META_API_VERSION = "v24.0"
+
+# Secrets (wrangler secret put ...):
+#   MCP_SECRET                   - connector URL'sindeki gizli anahtar
+#   META_ACCESS_TOKEN            - Meta System User token'ı
+#   GOOGLE_SERVICE_ACCOUNT_JSON  - Google servis hesabı JSON anahtarı (tek satır)
