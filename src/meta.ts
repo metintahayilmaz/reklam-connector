@@ -279,6 +279,28 @@ export function registerMetaTools(server: McpServer, env: Env) {
   );
 
   server.registerTool(
+    "meta_list_instagram_accounts",
+    {
+      title: "Instagram hesaplarını listele",
+      description:
+        "Reklam hesabında reklam yayınlamak için kullanılabilen Instagram hesaplarını ve her Facebook sayfasına bağlı Instagram hesabını kontrol eder. Kreatiflerdeki instagram_user_id buradan alınır. Boş dönerse hesap sayfaya bağlı değildir veya sistem kullanıcısına atanmamıştır.",
+      inputSchema: { account_id: z.string() },
+      annotations: READ,
+    },
+    safe(async ({ account_id }) => {
+      const [adAccount, pages] = await Promise.allSettled([
+        meta.get(`${act(account_id)}/instagram_accounts`, { fields: "id,username" }),
+        meta.get("me/accounts", { fields: "id,name,instagram_business_account{id,username},connected_instagram_account{id,username}", limit: 100 }),
+      ]);
+      const err = (r: PromiseRejectedResult) => String(r.reason?.message ?? r.reason);
+      return {
+        ad_account_instagram_accounts: adAccount.status === "fulfilled" ? adAccount.value.data : { error: err(adAccount) },
+        page_links: pages.status === "fulfilled" ? pages.value.data : { error: err(pages) },
+      };
+    }),
+  );
+
+  server.registerTool(
     "meta_list_audiences",
     {
       title: "Özel kitleleri listele",
